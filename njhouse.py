@@ -40,8 +40,7 @@ class NjHouse:
             print "页面加载失败...."
             return None
 
-        pattern = re.compile('<h2.*?h2>.*?<span>.*?</span>',
-                             re.S)
+        pattern = re.compile(r'<div class="article block untagged mb15"(.*?)<div class="single-clear">', re.S)
 
         # pattern = re.compile('<div.*?author">.*?<a.*?<img.*?>(.*?)</a>.*?<div.*?content">(.*?)<!--(.*?)-->.*?</div>(.*?)<div class="stats.*?class="number">(.*?)</i>', re.S)
 
@@ -49,12 +48,18 @@ class NjHouse:
 
         page_stories = []
         for item in items:
+            title = re.search(r'<h2>(.*?)</h2>', item)
+            if title:
+                page_stories.append(title.group())
+
+            '''
             have_img = re.search("img", item[3])
             if not have_img:
                 replace_br = re.compile('<br/>')
                 text = re.sub(replace_br, "\n", item[1])
                 # item[0]是一个段子的发布者，item[1]是内容，item[2]是发布时间,item[4]是点赞数
                 page_stories.append([item[0].strip(), text.strip(), item[2].strip(), item[4].strip()])
+                '''
         return page_stories
 
     # 加载并提取页面的内容，加入到列表中
